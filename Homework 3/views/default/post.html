@@ -1,0 +1,52 @@
+{{extend 'layout.html'}}
+
+{{if auth.user_id is not None:}}
+    <div id="entryform" style="display: none">
+        {{=form}}
+    </div>
+
+    <a class="btn btn-danger" id="btn_add">New Post</a>
+{{pass}}
+
+{{if auth.user_id is None:}}
+    <div class="main_login">
+        {{=A('Sign Up', _class='btn btn-success', _href=URL('default', 'user', args=['register']))}}
+        {{=A('Sign In', _class='btn btn-success', _href=URL('default', 'user', args=['login']))}}
+    </div>
+{{pass}}
+
+    <div>{{=A('Board', _class='btn btn-danger', _href=URL('default', 'index'))}}</div>
+
+<div class="boardname">{{=board.board_name}}</div>
+
+<div id="stores">
+  {{for s in posts:}}
+  <div class="sale">
+     {{if s.creator == auth.user_id:}}
+        <span class="pencil">
+            {{=A(I(_class='fa fa-pencil'), _href=URL('default', 'edit', args=[s.id]))}}
+        </span>
+        <span class="trash">
+            {{=A(I(_class='fa fa-trash'), _href=URL('default', 'delete', args=[s.id]))}}
+        </span>
+     {{pass}}
+      <div class="saletitle">{{=s.post_name}}</div>
+
+      <div class="description">{{=board.board_name}}: {{=s.description}}</div>
+      <div class="date">
+        Date Created: {{=s.post_time}}
+      </div>
+  </div>
+  {{pass}}
+</div>
+
+ <script>
+  $("#btn_add").click(function(e) {
+    // Yeehaa
+    var x = 1;
+    $("#entryform").slideDown(1000);
+    x = x + 1;
+    $("#btn_add").slideUp(1000);
+    var y = x + 2;
+  });
+</script>

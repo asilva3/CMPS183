@@ -1,0 +1,40 @@
+{{extend 'layout.html'}}
+
+{{if auth.user_id is not None:}}
+    <div id="entryform" style="display: none">
+        {{=form}}
+    </div>
+
+    <a class="btn btn-danger" id="btn_add">Create Board</a>
+{{pass}}
+
+{{if auth.user_id is None:}}
+    <div class="main_login">
+        {{=A('Sign Up', _class='btn btn-success', _href=URL('default', 'user', args=['register']))}}
+        {{=A('Sign In', _class='btn btn-success', _href=URL('default', 'user', args=['login']))}}
+    </div>
+{{pass}}
+
+<div id="stores">
+  {{for s in board_list:}}
+  <div class="sale">
+    <span class="saletitle">{{=s.board_name}}</span>
+    <div class="number">
+      {{=A(s.board_count, _href=URL('default', 'post', args=[s.id]))}}
+    </div>
+    <h3>New Post today</h3>
+  </div>
+  {{pass}}
+</div>
+
+ <script>
+  $("#btn_add").click(function(e) {
+    // Yeehaa
+    var x = 1;
+    $("#entryform").slideDown(1000);
+    x = x + 1;
+    $("#btn_add").slideUp(1000);
+    var y = x + 2;
+  });
+</script>
+

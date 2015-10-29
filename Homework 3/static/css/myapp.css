@@ -1,0 +1,78 @@
+/* line 1, ../sass/_main.scss */
+.colorful {
+  color: #bb8833;
+}
+
+/* line 5, ../sass/_main.scss */
+.main_login {
+  margin-left: 1000px;
+}
+
+/* line 9, ../sass/_main.scss */
+.boardname {
+  font-size: 5em;
+  color: #8C001A;
+  Padding: 25px;
+}
+
+/* line 15, ../sass/_main.scss */
+.sale {
+  padding: 50px;
+  background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Y3ZjRkNSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2VlZThhYSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA==');
+  background-size: 100%;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f7f4d5), color-stop(100%, #eee8aa));
+  background-image: -moz-linear-gradient(#f7f4d5, #eee8aa);
+  background-image: -webkit-linear-gradient(#f7f4d5, #eee8aa);
+  background-image: linear-gradient(#f7f4d5, #eee8aa);
+  margin: 65px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  border: 1px solid #666;
+  -moz-box-shadow: rgba(0, 0, 0, 0.7) 0 4px 10px 2px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.7) 0 4px 10px 2px;
+  box-shadow: rgba(0, 0, 0, 0.7) 0 4px 10px 2px;
+  vertical-align: top;
+  display: inline-block;
+}
+/* line 25, ../sass/_main.scss */
+.sale .pencil {
+  font-size: 2em;
+  margin-left: 200px;
+}
+/* line 28, ../sass/_main.scss */
+.sale .pencil a {
+  color: black;
+}
+/* line 32, ../sass/_main.scss */
+.sale .trash {
+  font-size: 2em;
+}
+/* line 34, ../sass/_main.scss */
+.sale .trash a {
+  color: black;
+}
+/* line 38, ../sass/_main.scss */
+.sale .saletitle {
+  border-bottom: 5px solid black;
+  font-size: 3em;
+  color: black;
+}
+/* line 43, ../sass/_main.scss */
+.sale .number {
+  font-size: 4em;
+  margin-left: 40px;
+}
+/* line 46, ../sass/_main.scss */
+.sale .number a {
+  color: black;
+}
+/* line 50, ../sass/_main.scss */
+.sale .number .desccription {
+  font-family: "Times New Roman", Times, serif;
+}
+/* line 55, ../sass/_main.scss */
+.sale .date {
+  margin-top: 40px;
+  color: #996515;
+}

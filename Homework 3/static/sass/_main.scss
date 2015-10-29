@@ -1,0 +1,59 @@
+.colorful {
+  color: $clrHilight;
+}
+
+.main_login{
+  margin-left: 1000px;
+}
+
+.boardname{
+  font-size: 5em;
+  color: #8C001A;
+  Padding: 25px;
+}
+
+.sale{
+  //background-color
+  padding: 50px;
+  @include background-image(linear-gradient(lighten($clrListBg, 10%), $clrListBg));
+  margin: 65px;
+  @include border-radius(20px);
+  border: 1px solid $clrText;
+  @include box-shadow(rgba(#000,0.7) 0 4px 10px 2px);
+  vertical-align: top;
+  display: inline-block;
+  .pencil{
+    font-size: 2em;
+    margin-left: 200px;
+    a{
+      color: black;
+    }
+  }
+  .trash{
+    font-size: 2em;
+    a{
+      color: black;
+    }
+  }
+  .saletitle{
+    border-bottom: 5px solid black;
+    font-size: 3em;
+    color: black;
+  }
+  .number{
+    font-size: 4em;
+    margin-left: 40px;
+    a {
+      color: black;
+    }
+
+    .desccription{
+      font-family: "Times New Roman", Times, serif;
+    }
+  }
+
+  .date{
+    margin-top: 40px;
+    color: #996515;
+  }
+}
