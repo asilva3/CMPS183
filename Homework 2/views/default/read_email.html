@@ -1,0 +1,22 @@
+{{extend 'layout.html'}}
+
+{{if len(email) > 0:}}
+    <h1>{{=email['from']}}</h1>
+    <p>Date: {{=email['date']}}</p>
+    <p>Subject: {{=email['subject']}}</p>
+    {{if email['read']:}}
+        <p class="new">{{=icon_read}} READ</p>
+    {{else:}}
+        <p class="nonew">{{=icon_noread}} NOT READ</p>
+    {{pass}}
+    {{if email['starred']:}}
+        <p class="nonew">{{=icon_shop}} Starred</p>
+    {{else:}}
+        <p class="nostar">{{=icon_shop}}Not Starred</p>
+    {{pass}}
+    <section>
+        <p class="text">{{=email['text']}}</p>
+    </section>
+{{else:}}
+    <div class="Sad">Something went wrong :(</div>
+{{pass}}

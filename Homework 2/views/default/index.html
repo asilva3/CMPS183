@@ -1,0 +1,37 @@
+{{extend 'layout.html'}}
+
+<table style = "width: 100%">
+
+{{if len(email_list) > 0 :}}
+    <tr>
+        <th></th>
+        <th>Email</th>
+        <th>Subject</th>
+        <th>Date</th>
+        <th>Read</th>
+        <th>Starred</th>
+    </tr>
+
+    {{for email in email_list:}}
+        <td class="mylist">
+                <td class="from">{{=email['from']}}</td>
+                <td class="subject">{{=A(email['subject'], _href=URL('default', 'read_email', args=[email['id']]) )}}</td>
+                <td class="date">{{=email['date']}}</td>
+                {{if email['read']:}}
+                    <td class="read">{{=icon_read}}</td>
+                {{else:}}
+                    <td class="noread">{{=icon_noread}}</td>
+                {{pass}}
+                {{if email['starred']:}}
+                    <td class="star">{{=icon_shop}}</td>
+                {{else:}}
+                    <td class="nostar">{{=icon_shop}}</td>
+                {{pass}}
+        </tr>
+    {{pass}}
+
+{{else:}}
+<div class="noresults">No mail to read or not connected to internet.</div>
+{{pass}}
+
+</table>

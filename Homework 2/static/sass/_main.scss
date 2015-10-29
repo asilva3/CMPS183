@@ -1,0 +1,60 @@
+tr:nth-child(even){
+  background-color: black;
+}
+
+div.maincontent{
+  color: $clrText;
+  line-height: 130%;
+}
+
+td.red{
+  color: red;
+}
+
+td.read{
+  color: $clrred;
+}
+td.noread{
+  color: $clrMain;
+}
+
+td.from{
+  color: red;
+}
+
+td.subject{
+  color: red;
+}
+
+td.date{
+  color: red;
+}
+
+td.star{
+  color: $clrYellow;
+}
+
+td.nostar{
+  color: $clrLightBg;
+}
+
+section{
+  width: 350px;
+  float: left;
+  padding: 10px;
+  p.text{
+    white-space: pre-wrap;
+  }
+}
+
+p.new{
+  color: red;
+}
+
+p.nonew{
+  color: yellow;
+}
+
+p.nostar{
+  color: grey;
+}

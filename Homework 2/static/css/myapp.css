@@ -1,0 +1,76 @@
+/* line 1, ../sass/_main.scss */
+tr:nth-child(even) {
+  background-color: black;
+}
+
+/* line 5, ../sass/_main.scss */
+div.maincontent {
+  color: #666;
+  line-height: 130%;
+}
+
+/* line 10, ../sass/_main.scss */
+td.red {
+  color: red;
+}
+
+/* line 14, ../sass/_main.scss */
+td.read {
+  color: #9f0001;
+}
+
+/* line 17, ../sass/_main.scss */
+td.noread {
+  color: #3748bb;
+}
+
+/* line 21, ../sass/_main.scss */
+td.from {
+  color: red;
+}
+
+/* line 25, ../sass/_main.scss */
+td.subject {
+  color: red;
+}
+
+/* line 29, ../sass/_main.scss */
+td.date {
+  color: red;
+}
+
+/* line 33, ../sass/_main.scss */
+td.star {
+  color: #fdff00;
+}
+
+/* line 37, ../sass/_main.scss */
+td.nostar {
+  color: #ccc;
+}
+
+/* line 41, ../sass/_main.scss */
+section {
+  width: 350px;
+  float: left;
+  padding: 10px;
+}
+/* line 45, ../sass/_main.scss */
+section p.text {
+  white-space: pre-wrap;
+}
+
+/* line 50, ../sass/_main.scss */
+p.new {
+  color: red;
+}
+
+/* line 54, ../sass/_main.scss */
+p.nonew {
+  color: yellow;
+}
+
+/* line 58, ../sass/_main.scss */
+p.nostar {
+  color: grey;
+}
