@@ -1,0 +1,124 @@
+{{extend 'layout.html'}}
+
+{{for img_info in image_list:}}
+<div style="display:inline-block; margin:10px;">
+   <img src="{{=img_info['url']}}" style="height:200px" />
+   <div>
+     {{if auth.user:}}
+       <span class="thumb-rating" data-picid="{{=img_info['id']}}">
+         <input class="form-control rating" value="{{=img_info['thumbs']}}" style="display:none"/>
+         <span style="white-space:nowrap">
+           <span class="thumbs-up">
+             <i class="fa fa-thumbs-o-up"></i>
+           </span>
+           <span class="thumbs-down">
+             <i class="fa fa-thumbs-o-down"></i>
+           </span>
+         </span>
+       </span>
+     {{pass}}
+   </div>
+</div>
+{{pass}}
+
+
+<script>
+jQuery('span.thumb-rating').each(function(){
+  // For each thumb rating span, let's find some key elements.
+  // 'this' can vary in javascript, so let's have the span.thumb-rating on which
+  // this function is called be stored in a variable called 'self'.
+  var self = jQuery(this);
+  // First, the input, so using val() we can know whether the thumb is up ('u'),
+  // down ('d'), or not defined ('', or none of the above values).
+  var input_el = self.find("input");
+  // And the thumbs up and down.
+  var thumbs_up = self.find("span.thumbs-up i.fa");
+  var thumbs_down = self.find("span.thumbs-down i.fa");
+  var span_up = self.find("span.thumbs-up");
+  var span_down = self.find("span.thumbs-down");
+  // And the picture id.
+  var picid = self.attr('data-picid');
+
+  // To cause a thumbs_up to appear filled, you add to it the class fa-thumbs-up;
+  // to cause it to appear unfilled, you add to the i.fa element the class fa-thumbs-o-up.
+  // For instance: thumbs_up.removeClass("fa-thumbs-o-up").addClass("fa-thumbs-up")
+  // would fill it.
+
+  var do_thumbs_up = function() {
+    // Write here a function that fills the thumbs up, and unfills the thumbs down.
+     thumbs_up.removeClass("fa-thumbs-o-up").addClass("fa-thumbs-up");
+     thumbs_down.removeClass("fa-thumbs-down").addClass("fa-thumbs-o-down");
+  };
+  var do_thumbs_down = function() {
+    // Write here a function that fills the thumbs down, and unfills the thumbs up.
+    thumbs_down.removeClass("fa-thumbs-o-down").addClass("fa-thumbs-down");
+    thumbs_up.removeClass("fa-thumbs-up").addClass("fa-thumbs-o-up");
+  };
+  var do_no_thumbs = function() {
+    // Write here a function that unfills both thumbs.
+    thumbs_up.removeClass("fa-thumbs-up").addClass("fa-thumbs-o-up");
+    thumbs_down.removeClass("fa-thumbs-down").addClass("fa-thumbs-o-down");
+  };
+
+  // Using the above functions, write a function that displays the correct state of the
+  // thumbs up and down according to the value of the input.
+  var show_thumbs = function() {
+    // Write code here.
+    
+    if(input_el.val() == 'u')  
+      do_thumbs_up();
+    else if(input_el.val() == 'd'){
+      do_thumbs_down();
+    }
+    else{
+      do_no_thumbs();
+    }
+  };
+
+  function send_thumbs(thumbs) {
+    // This function sends to the server the thumb status, which should be
+    // one of 'u', 'd', or ''.  Call it from the click handlers.
+    jQuery.post(
+            '{{=URL('vote', user_signature=True)}}', // URL for the AJAX call
+            {   // Dictionary of names to values. The server will have:
+              'picid': picid,  // request.vars.picid
+              'thumbs': thumbs   // request.vars.thumbs
+            }
+    );
+  }
+
+  // You have to add handlers for hover and click to the thumbs up and down.
+  span_up.on("mouseover", function() {
+    // Write here what to do on mouseover of thumbs up.
+    do_thumbs_up();
+  });
+
+  span_down.on("mouseover", function() {
+    // Write here what to do on mouseover of thumbs down.
+    do_thumbs_down();
+  });
+
+  span_up.on("click", function() {
+    // Write here what to do on click of thumbs up.
+    do_thumbs_up();
+    send_thumbs('u');
+    input_el.val('u');
+  });
+
+  span_down.on("click", function() {
+    // Write here what to do on click of thumbs down.
+    do_thumbs_down();
+    send_thumbs('d');
+    input_el.val('d'); 
+  });
+
+  self.on("mouseout", function() {
+    // Write here what to do when the mouse leaves the span with the
+    // thumbs up and down.
+   show_thumbs(); 
+  });
+
+  // This is used to initialize the thumbs.
+  show_thumbs();
+});
+</script>

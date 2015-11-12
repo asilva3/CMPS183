@@ -1,0 +1,23 @@
+h1, h2, h3 {
+  color: $clrMain;
+}
+
+div.maincontent {
+  color: $clrText;
+  line-height: 130%;
+}
+
+div.mylist {
+  // background-color: $clrListBg;
+  padding: 20px;
+  @include background-image(linear-gradient(lighten($clrListBg, 10%), $clrListBg));
+  margin: 10px;
+  @include border-radius(20px);
+  border: 1px solid $clrText;
+  @include box-shadow(rgba(#000,0.7) 0 4px 10px 2px);
+  display: inline-block;
+  .shoptitle {
+    font-size: 1.6em;
+    color: $clrMain;
+  }
+}
