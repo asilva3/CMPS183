@@ -1,0 +1,37 @@
+The purpose of these projects is to demonstrate the understanding of web applications between different languages, such as: Python, HTML, Ractive, and MySQL.
+In order to be able to view these homeworks a user must do the following: 
+
+Install Python
+If your machine doesn't come with Python, you need to install it.  I particularly recommend installing Python via Anaconda. 
+
+Install Web2py
+Install the source distribution of web2py.  Unzip it in any directory. The source distribution files may be found in github.com/asilva3/CMPS183
+
+Install Ruby
+Install Ruby.  I didn't code in Ruby, but it is used by Compass for the CSS styling. 
+You may find the installation of Ruby at https://www.ruby-lang.org/en/downloads/
+
+Install Compass
+Install Compass.  We will be using Compass for CSS.
+You may find the installation of Compass at http://compass-style.org/install/
+
+Install PyCharm
+Recommended, but not required.  Install PyCharm professional edition.  
+It will make your life much easier and your productivity much higher.  
+A free edition for students is available. PyCharm is an excellent Python editor with support for code analysis, and it supports web2py. 
+It will make your development much more effective.  
+PyCharm normal edition is free, but it does not support web2py, and the code analysis is thus not nearly as helpful.
+You may find the installation of Pycharm at https://www.jetbrains.com/pycharm/
+
+Install Git
+Install git, if you don't have it already. For version control.
+
+Once you have these setup, you may access my work by doing the following:
+1. Open up the soruce distribution of web2py.
+2. There will be a file web2py (type: PY File) that the user will click on
+3. Anaconda python will open and then web2py framework will pop-up askinng user for a password. Insert any password for admin rights.
+4. This will take you to a localhost site on a browser showing "Installed Applications"
+5. On the right hand side there is "Upload and Install Packed Applications". Type any name for it and upload my zipped file with extension .w2p
+6. It is now uploaded and ready for the user to test. Click on the link.
+7. In order to see the source code, one will open it up in pycharm or sublime by going in the source distrubition web2py file.
+8. Inside there is that new application file inside that source distribtion.
