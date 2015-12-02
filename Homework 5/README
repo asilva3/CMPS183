@@ -1,0 +1,26 @@
+Please download "Homework5.w2p" file and upload it in web2py. There are still 2 things needed to work on. 
+The description of a post is not working properly and the deletion function must be worked on. These are the guidelines for the homework:
+
+The Assignment
+In this homework assignment, you will develop a somewhat simplified version of homework 3 relying on server-side rendering and ractive.js. 
+
+The home page
+The home page should look very similar to the one of homework 3, except that for simplicity, you don't need to sort the boards in any special order, and you don't need to display the number of new messages per board. Of course, you are free to implement this if you like.  If you do, however, make sure that the information is updated regularly without needed a page reload. 
+
+When you create a board, the list of boards on the screen is updated without any page upload, using ractive. 
+When you click on the page corresponding to a particular board, you do a page load to go to the board page.  In this way, each board has a URL that you can potentially share with interested people e.g. via email. 
+
+The javascript on the page must check every 10 seconds or so whether some other user (or the same user logged into a different window) has created another board.
+
+The board pages
+The board pages must look as the pages specified in homework 3, except that the New Post button should be blue, and the trash can in the posts owned by the user should be replaced with a cross.  All the operations on the board -- creating a new post, editing an existing post, or deleting a post -- have to be performed in place, without page reloads nor form submissions.  Detailed instructions follow. 
+
+New post.  When a logged-in user clicks on the button to create a new post, a new, blank post appears. 
+
+Editing a post. The user can edit the title and/or the content of their posts.  Any changes to a post need to be saved within 10 seconds back to the server, giving to the user some subtle indication (e.g. via a small spinner) that the changes are in the process of being synched with the server.  If the saving fails, then a warning icon should be displayed next to the post, and on hover, it should indicate that some information could not be saved.
+
+Deleting a post.  As before, crosses should be displayed only for one's own posts. When a user clicks on the cross icon to delete a post, the post is marked for deletion (you may wish to change its background color to a menacing shade of orange), and a new red button with a trash can icon should appear.  In other words, the trash can button should be present on the page exactly when there is at least one post marked for deletion.  When the user presses on the trash can, all posts marked for deletion should be removed from the page, and they should be deleted on the server as well. 
+
+Keeping the posts up to date.  Every 10 seconds or so, the page should check with the server to find out any changes to the posts on the server -- for instance, another user who has added, deleted, or modified their posts. 
+
+Of course, it is possible that the same user, logged in via a different tab/window, modifies posts in the same table.  I leave it up to you to decide what to do if a user modifies a post both directly in the page, and via another tab/window -- I leave it up to you how and if to merge the remote changes with the local ones. 
