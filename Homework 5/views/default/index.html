@@ -1,0 +1,185 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{extend 'layout.html'}}
+
+<div id="target">
+
+</div>
+
+
+<script id="template" type="text/ractive">
+{% #if count === "1" %}
+     <div id="new board">
+        <button class="btn btn-success" data-msgid="{% msg_id %}" on-click="newboard">Create Board</button>
+     </div>
+{% /if %}
+
+<h2>Boards:</h2>
+<div class="mess">
+  {% #msg_dict:msg_id %}
+    {% #if is_draft === true %}
+        <div class="sale">
+        {% #if count === "1" %}
+            <button class="btn btn-success" data-msgid="{% msg_id %}" on-click="edit-draft">Edit</button>
+        {% /if %}
+        {% #if edit === false %}
+            {% message_content %}
+        {% /if %}
+        {% #if edit === true %}
+                <textarea id="editarea" on-blur="editdone" data-areaid="3" value="{% active_draft %}">
+                </textarea>
+                <input class="btn btn-success" type="submit" value="Submit" on-click="addmsg"/>
+        {% /if %}
+            <h5>Finish Your Board!</h5>
+
+        </div>
+    {% /if %}
+
+    {% #if is_draft === false %}
+      <div class="sale">
+         <div class="content">
+            {% message_content %}
+         </div>
+         <div class="url">
+            <a href="{% "view_post/?msg_id=" + msg_id %}">Go to Posts!</a>
+         </div>
+      </div>
+    {% /if %}
+  {% /msg_dict %}
+</div>
+
+{% #if loading %}
+  <div id="load_spinner">
+    <i class="fa fa-spinner fa-spin fa-4x"></i>
+  </div>
+{% /if %}
+
+</script>
+
+<script>
+$(function() {
+
+  // Ractive object
+  var MAIN = new Ractive({
+    el: '#target',
+    template: '#template',
+    delimiters: ['{%', '%}'],
+    tripleDelimiters: ['{%%', '%%}'],
+    data: {
+      msg_dict: {},
+      board_id: "{{=board_id}}",
+      draft_id: "{{=draft_id}}",
+      active_draft: "",
+      loading: true,
+      edit: false,
+      count: "{{=count}}",
+      mytext: "New Board"
+    },
+  });
+
+  // Loads the initial list of messages.
+  $.ajax("{{=URL('default', 'load_messages', user_signature=True)}}",
+          {
+            method: 'POST',
+            success: function (data) {
+              MAIN.set('msg_dict', data['msg_dict']);
+              MAIN.set('loading', false);
+            }
+          }
+  );
+
+  function send_message(msg_content, is_draft) {
+    var call_draft_id = MAIN.get('draft_id');
+    $.ajax("{{=URL('default', 'add_msg', user_signature=True)}}",
+            {
+              data: {
+                msg: msg_content,
+                is_draft: is_draft,
+                msg_id: call_draft_id
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+                var msg_dict = MAIN.get('msg_dict');
+                if (call_draft_id in msg_dict) {
+                  msg_dict[call_draft_id]['message_content'] = msg_content;
+                  msg_dict[call_draft_id]['is_draft'] = is_draft;
+                } else {
+                  msg_dict[call_draft_id] = {
+                    message_content: msg_content,
+                    is_draft: is_draft
+                  }
+                }
+                MAIN.set('msg_dict', msg_dict);
+              },
+              error: function() {}
+            }
+    );
+  }
+
+  // Called every 10s, or upon switching drafts.
+  function periodic_send() {
+    var new_msg = MAIN.get('active_draft');
+    var msg_dict = MAIN.get('msg_dict');
+    var draft_id = MAIN.get('draft_id');
+    if (draft_id in msg_dict) {
+      // There is already a draft.  Check if it is modified.
+      var old_msg = msg_dict[draft_id]['message_content'];
+      if (new_msg !== old_msg) {
+        // Yes, it is modified.  Send it to the server.
+        send_message(new_msg, true);
+      }
+    } else if ($.trim(new_msg).length > 0) {
+      // This is a brand new draft, send it to the server.
+      send_message(new_msg, true);
+    }
+  }
+
+  function generateUUID(){
+    var d = new Date().getTime();
+    if(window.performance && typeof window.performance.now === "function"){
+        d += performance.now();; //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  }
+
+  // This code is called when the submit button is pressed.
+  MAIN.on("addmsg", function(e) {
+    var msg_content = MAIN.get('active_draft');
+    // Send content back to server.
+    send_message(msg_content, false);
+    MAIN.set('active_draft', '');
+    MAIN.set('edit', false);
+    // Invent new random draft_id.
+    MAIN.set('draft_id', generateUUID());
+    return false;
+  });
+
+  // Listens to click on Edit buttons for drafts.
+  MAIN.on("edit-draft", function(e) {
+    // First, we send to the server the current draft, to avoid losing it.
+    periodic_send();
+    var t = $(e.original.target); // This is the button on which we clicked.
+    var clicked_id = t.data('msgid');  // To set it, you could do .data('msgid', 'my id');
+    var msg_dict = MAIN.get('msg_dict');
+    // First, display the draft text in the editing area.
+    MAIN.set('active_draft', msg_dict[clicked_id]['message_content']);
+    // Sets the id of the draft being edited.
+    MAIN.set('draft_id', clicked_id);
+    MAIN.set('edit', true)
+  });
+
+  MAIN.on("newboard", function(e){
+   var msg_content = MAIN.get('');
+   send_message("New Board", true);
+   MAIN.set('draft_id', generateUUID());
+   return false;
+  });
+
+  setInterval(periodic_send, 10000);
+});
+</script>

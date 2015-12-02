@@ -1,0 +1,22 @@
+.colorful {
+  color: $clrHilight;
+}
+
+.sale{
+  //background-color
+  padding: 50px;
+  @include background-image(linear-gradient(lighten($clrListBg, 10%), $clrListBg));
+  margin: 65px;
+  @include border-radius(20px);
+  border: 1px solid $clrText;
+  @include box-shadow(rgba(#000,0.7) 0 4px 10px 2px);
+  vertical-align: top;
+  display: inline-block;
+
+  .saletitle{
+    border-bottom: 5px solid black;
+    font-size: 3em;
+    color: black;
+  }
+
+}

@@ -1,0 +1,264 @@
+{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
+{{extend 'layout.html'}}
+
+<div id="target"></div>
+
+<script id="template" type="text/ractive">
+<div>{{=A('Back To Boards!', _class='btn btn-danger', _href=URL('default', 'index'))}}</div>
+
+{% #if count === "1" %}
+    <div id="new post">
+        <button class="btn btn-danger" data-msgid="{% msg_id %}" on-click="newpost">Create Post</button>
+     </div>
+{% /if %}
+
+<h1>Board Title: {% board_title %}</h1>
+<h2>Posts:</h2>
+
+<div class="mess">
+  {% #post_dict:msg_id %}
+    <div class="sale">
+    <div class="buttons">
+        {% #if is_owner === true %}
+            <a class="btn btn-danger {% #if delete_disabled %} disabled {% /if %}" on-click="delete_items"><i class="fa fa-trash"></i></a>
+             <tr class="{% #if todelete %} delete_pending {% /if %}">
+                <td class="line_check"><input type="checkbox" checked="{% todelete %}"/></td>
+                <td class="line_name">
+                <span data-id="{% id %}" on-click="clickname">{% name %}</span></td>
+            </tr>
+        {% /if %}
+     </div>
+
+
+    {% #if edit_id !== msg_id %}
+        {%post_content %}
+    {% /if %}
+
+    {% #if count === "1" %}
+        {% #if edit === false %}
+            {% #if is_owner === true %}
+                <button class="btn btn-success" data-msgid="{% msg_id %}" on-click="edit-draft">Edit Title</button>
+            {% /if %}
+        {% /if %}
+        {% #if edit_id === msg_id %}
+            {% #if is_owner === true %}
+                <textarea id="editarea" on-blur="editdone" data-areaid="3" value="{% active_draft %}">
+                </textarea>
+                <input class="btn btn-success" type="submit" value="Submit" on-click="addmsg"/>
+            {% /if %}
+        {% /if %}
+   {% /if %}
+
+        <div id=description>
+        {% #if edit_id !== msg_id %}
+            {%post_content %}
+        {% /if %}
+
+        {% #if count === "1" %}
+            {% #if edit === false %}
+                {% #if is_owner === true %}
+                    <button class="btn btn-success" data-msgid="{% msg_id %}" on-click="edit-draft">Edit Description</button>
+                {% /if %}
+            {% /if %}
+            {% #if edit_id === msg_id %}
+                {% #if is_owner === true %}
+                    <textarea id="editarea" on-blur="editdone" data-areaid="3" value="{% active_draft2 %}">
+                    </textarea>
+                    <input class="btn btn-success" type="submit" value="Submit" on-click="addmsg"/>
+                {% /if %}
+            {% /if %}
+        {% /if %}
+   </div>
+  {% /post_dict %}
+</div>
+
+{% #if loading %}
+  <div id="load_spinner">
+    <i class="fa fa-spinner fa-spin fa-4x"></i>
+  </div>
+{% /if %}
+</script>
+
+<script>
+$(function() {
+
+  // Ractive object
+  var MAIN = new Ractive({
+    el: '#target',
+    template: '#template',
+    delimiters: ['{%', '%}'],
+    tripleDelimiters: ['{%%', '%%}'],
+    data: {
+      post_dict: {},
+      draft_id: "{{=draft}}",
+      board_id: "{{=board_id}}",
+      board_title: "{{=board_title}}",
+      new: false,
+      active_draft: "",
+      active_draft2: "",
+      loading: true,
+      edit: false,
+      edit_id: null,
+      delete_disabled: false,
+      clicked_field: "",
+      count: "{{=count}}",
+    },
+  });
+
+load_all();
+
+function load_all() {
+    // Loads the initial list of posts.
+    $.ajax("{{=URL('default', 'load_post', user_signature=True)}}",
+            {
+                data: {
+                    board_id: MAIN.get('board_id'),
+                },
+                method: 'POST',
+                success: function (data) {
+                    //MAIN.set('post_dict', data['post_dict']);
+                    MAIN.set('loading', false);
+                    //var processDict = MAIN.get('post_dict');
+                    var processDict = data['post_dict'];
+                    //alert("load");
+                    for (var item in processDict) {
+
+                        if (processDict[item]['creator'] == "{{=auth.user_id}}") {
+                            processDict[item]['is_owner'] = true;
+                        }
+                        else {
+                            processDict[item]['is_owner'] = false;
+                        }
+                    }
+                    MAIN.set('post_dict', processDict)
+                }
+            }
+    );
+}
+
+  //Adds a post to the board that it is in and initalize itself a creator
+  function send_message(msg_content, is_post_draft) {
+    var call_draft_id = MAIN.get('draft_id');
+    var board_id = MAIN.get('board_id');
+    $.ajax("{{=URL('default', 'add_post', user_signature=True)}}",
+            {
+              data: {
+                msg: msg_content,
+                is_post_draft: is_post_draft,
+                board_id: board_id,
+                msg_id: call_draft_id
+              },
+              method: 'POST',
+              success: function() {
+                // Reflect in the list of drafts or messages the update sent to the server.
+                //alert("Success");
+                var post_dict = MAIN.get('post_dict');
+                if (call_draft_id in post_dict) {
+                  post_dict[call_draft_id]['post_content'] = msg_content;
+                  post_dict[call_draft_id]['is_post_draft'] = is_post_draft;
+                  post_dict[call_draft_id]['board_id'] = board_id;
+                  post_dict[call_draft_id]['creator'] = "{{=auth.user_id}}";
+                } else {
+
+                  post_dict[call_draft_id] = {
+                    post_content: msg_content,
+                    board_id: board_id,
+                    is_post_draft: is_post_draft,
+                    creator: "{{=auth.user_id}}"
+                  }
+                 //alert(post_dict[call_draft_id]['creator']);
+
+                }
+                MAIN.set('post_dict', post_dict);
+              },
+              error: function() {}
+            }
+    );
+  }
+
+  // Called every 10s, or upon switching drafts.
+  function periodic_send() {
+    var new_msg = MAIN.get('active_draft');
+    var post_dict = MAIN.get('post_dict');
+    var draft_id = MAIN.get('draft_id');
+    if (draft_id in post_dict) {
+      // There is already a draft.  Check if it is modified.
+      var old_msg = post_dict[draft_id]['post_content'];
+      if (new_msg !== old_msg) {
+        // Yes, it is modified.  Send it to the server.
+        send_message(new_msg, true);
+      }
+    } else if ($.trim(new_msg).length > 0) {
+      // This is a brand new draft, send it to the server.
+      send_message(new_msg, true);
+    }
+  }
+
+  function generateUUID(){
+    var d = new Date().getTime();
+    if(window.performance && typeof window.performance.now === "function"){
+        d += performance.now();; //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+  }
+
+  // This code is called when the submit button is pressed.
+  MAIN.on("addmsg", function(e) {
+    var msg_content = MAIN.get('active_draft');
+    var board_id = MAIN.get('board_id');
+    // Send content back to server.
+    send_message(msg_content, false);
+    MAIN.set('active_draft', '');
+    MAIN.set('edit', true);
+    MAIN.set('edit_id', null);
+    // Invent new random draft_id.
+    MAIN.set('draft_id', generateUUID());
+    return false;
+  });
+
+  // Listens to click on Edit buttons for drafts.
+  MAIN.on("edit-draft", function(e) {
+    // First, we send to the server the current draft, to avoid losing it.
+    periodic_send();
+    var t = $(e.original.target); // This is the button on which we clicked.
+    var clicked_id = t.data('msgid');  // To set it, you could do .data('msgid', 'my id');
+    MAIN.set('edit_id', clicked_id);
+    var post_dict = MAIN.get('post_dict');
+    // First, display the draft text in the editing area.
+    MAIN.set('active_draft', post_dict[clicked_id]['post_content']);
+    // Sets the id of the draft being edited.
+    MAIN.set('draft_id', clicked_id);
+    MAIN.set('edit', true);
+  });
+
+  //listens for the create new post button
+  MAIN.on("newpost", function(e){
+   var board_id = MAIN.get('board_id');
+   MAIN.set("new", true);
+   send_message("New Post", true);
+   load_all();
+   MAIN.set('draft_id', generateUUID());
+   return false;
+  });
+
+  //listens for if the user is clicking in or away
+  MAIN.on("startedit", function() {
+    MAIN.set("edit", true);
+    $("#editarea").focus();
+  });
+
+  //listens for if the user is done editing the post
+  MAIN.on("editdone", function(e) {
+    MAIN.set("edit", false);
+    MAIN.set('edit_id', null);
+    var myval = MAIN.get("active_draft");
+  });
+
+  setInterval(periodic_send, 10000);
+});
+</script>
