@@ -38,6 +38,7 @@ def load_messages():
 
 
 def view_post():
+    #select the board that the post is associated with
     board = db(db.board.message_id == request.vars.msg_id).select()
     board_title = board[0].message_content
     board_id = None
